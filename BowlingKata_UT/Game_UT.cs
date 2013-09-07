@@ -18,7 +18,7 @@ namespace BowlingKata_UT
         public void SetUp()
         {
             _scoreEngine = MockRepository.GenerateMock<IScoreEngine>();
-            _testObject = new Game();
+            _testObject = new Game(_scoreEngine);
         }
 
         [TearDown]
@@ -28,13 +28,13 @@ namespace BowlingKata_UT
         }
 
         [Test]
-        public void Constructor_Initializes_Frames_Collection_With_The_Correct_Number_Of_Frames()
+        public void InitializeNewGame_Initializes_Frames_Collection_With_The_Correct_Number_Of_Frames()
         {
             Assert.That(_testObject.Frames.Count, Is.EqualTo(10));
         }
 
         [Test]
-        public void Constructor_Initializes_Frames_Collection_Correct_NextFrame_Pointers()
+        public void InitializeNewGame_Initializes_Frames_Collection_Correct_NextFrame_Pointers()
         {
             for (var index = 0; index < 9; index++ )
             {
@@ -48,7 +48,7 @@ namespace BowlingKata_UT
         }
         
         [Test]
-        public void Constructor_Correctly_Initializes_Pin_Totals()
+        public void InitializeNewGame_Correctly_Initializes_Pin_Totals()
         {
             foreach (var frame in _testObject.Frames)
             {
@@ -59,45 +59,46 @@ namespace BowlingKata_UT
         }
 
         [Test]
-        public void ScoreGame_Calls_Score_Engine_On_Each_Frame_With_Correct_Parameters()
+        public void UpdateScore_Calls_Score_Engine_On_Each_Frame_With_Correct_Parameters()
         {
             for(var index = 0; index < 8; index++)
             {
                 var frameToScore = _testObject.Frames.ElementAt(index);
                 var subsequentFrame1 = frameToScore.NextFrame;
                 var subsequentFrame2 = subsequentFrame1.NextFrame;
-                _scoreEngine.Expect(s => s.ScoreFrame(frameToScore, subsequentFrame1, subsequentFrame2));
+                _scoreEngine.Expect(s => s.ScoreFrame(frameToScore, subsequentFrame1, subsequentFrame2)).Return(0);
             }
 
             var lastFrameToScore = _testObject.Frames.ElementAt(9);
-            _scoreEngine.Expect(s => s.ScoreFrame(lastFrameToScore, null, null));
+            _scoreEngine.Expect(s => s.ScoreFrame(lastFrameToScore, null, null)).Return(0);
+
+            _testObject.UpdateScore();
         }
 
         [Test]
-        public void ScoreGame_Correctly_Sets_Individual_Frame_Totals()
+        public void UpdateScore_Correctly_Sets_Individual_Frame_Totals()
         {
-            var frameTotals = new List<int>();
+            var lastFrameIndex = _testObject.Frames.Count - 1 ;
+            var secondToLastFrameIndex = _testObject.Frames.Count - 2;
 
-            for (var index = 0; index < 9; index++)
+            for (var index = 0; index <= secondToLastFrameIndex; index++)
             {
                 var frameToScore = _testObject.Frames.ElementAt(index);
                 var subsequentFrame1 = frameToScore.NextFrame;
                 var subsequentFrame2 = subsequentFrame1.NextFrame;
-                _scoreEngine.Expect(s => s.ScoreFrame(frameToScore, subsequentFrame1, subsequentFrame2));
+                _scoreEngine.Expect(s => s.ScoreFrame(frameToScore, subsequentFrame1, subsequentFrame2)).Return(index);
             }
 
-            for (var index = 0; index < 8; index++)
+            var lastFrameToScore = _testObject.Frames.ElementAt(lastFrameIndex);
+            _scoreEngine.Expect(s => s.ScoreFrame(lastFrameToScore, null, null)).Return(lastFrameIndex);
+
+            _testObject.UpdateScore();
+
+            for (var index = 0; index <= lastFrameIndex; index++)
             {
-                var frameToScore = _testObject.Frames.ElementAt(index);
-                var subsequentFrame1 = frameToScore.NextFrame;
-                var subsequentFrame2 = subsequentFrame1.NextFrame;
-                _scoreEngine.Expect(s => s.ScoreFrame(frameToScore, subsequentFrame1, subsequentFrame2));
+                var frameScore = _testObject.Frames.ElementAt(index).FrameScore;
+                Assert.That(frameScore, Is.EqualTo(index));
             }
-
-            var lastFrameToScore = _testObject.Frames.ElementAt(9);
-            _scoreEngine.Expect(s => s.ScoreFrame(lastFrameToScore, null, null));
-
-
         }
 
 

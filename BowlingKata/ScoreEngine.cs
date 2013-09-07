@@ -11,7 +11,7 @@ namespace BowlingKata
         int ScoreFrame(IFrame frameToScore, IFrame subsequentFrame1, IFrame subsequentFrame2);
     }
 
-    public class ScoreEngine
+    public class ScoreEngine : IScoreEngine
     {
         private ScoreCollaborator _scoreCollaborator;
 
