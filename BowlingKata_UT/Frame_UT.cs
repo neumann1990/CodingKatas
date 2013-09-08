@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using BowlingKata;
+﻿using BowlingKata;
 using NUnit.Framework;
 
 namespace BowlingKata_UT

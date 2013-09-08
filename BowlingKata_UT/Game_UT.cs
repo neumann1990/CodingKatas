@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using BowlingKata;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -101,40 +98,17 @@ namespace BowlingKata_UT
             }
         }
 
+        [Test]
+        public void UpdateScore_Returns_Correct_TotalScore()
+        {
+            _scoreEngine.Expect(s => s.ScoreFrame(Arg<Frame>.Is.Anything, 
+                                                    Arg<Frame>.Is.Anything, 
+                                                    Arg<Frame>.Is.Anything)
+                                ).Return(1).Repeat.Any();
 
-//        [Test]
-//        public void ScoreGame_Returns_0_If_No_Frames_Played()
-//        {
-//            var scoreTotal = _testObject.ScoreGame();
-//
-//            Assert.That(scoreTotal, Is.EqualTo(0));
-//        }
-//
-//        [Test]
-//        public void ScoreGame_Calls_ScoreFrame_On_Each_Frame()
-//        {
-//            for(var index = 0; index < _testObject.Frames.Length; index++)
-//            {
-//                var subsequentIndex1 = index + 1;
-//                var subsequentIndex2 = index + 2;
-//
-//                var frameToScore = _testObject.Frames[index];
-//
-//                Frame subsequentFrame1 = null;
-//                if(subsequentIndex1 <= _testObject.Frames.Length)
-//                {
-//                    subsequentFrame1 = _testObject.Frames[subsequentIndex1]; 
-//                }
-//
-//                if(subsequentIndex2 <= _testObject.Frames.Length)
-//                {
-//                    subsequentFrame2 = _testObject.Frames[subsequentIndex2]; 
-//                }
-//
-//                var subsequentFrame2 = _testObject.Frames[index];
-//
-//                _scoreEngine.ScoreFrame(_testObject.Frames[index])
-//            }
-//        }
+            var actualTotalScore = _testObject.UpdateScore();
+
+            Assert.That(actualTotalScore, Is.EqualTo(10));
+        }
     }
 }

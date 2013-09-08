@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace BowlingKata
 {
     public interface IFrame
     {
+        int TotalPins { get; }
         int PinsWithBall1 { get; set; }
         int PinsWithBall2 { get; set; }
 
         int FrameScore { get; set; }
 
-        Frame NextFrame { get; set; }
+        IFrame NextFrame { get; set; }
 
         bool IsSpare();
         bool IsStrike();
@@ -20,10 +17,12 @@ namespace BowlingKata
 
     public class Frame : IFrame
     {
+        public int TotalPins { get { return 10; } }
+
         public int PinsWithBall1 { get; set; }
         public int PinsWithBall2 { get; set; }
         public int FrameScore { get; set; }
-        public Frame NextFrame { get; set; }
+        public IFrame NextFrame { get; set; }
 
         public Frame()
         {
@@ -36,7 +35,7 @@ namespace BowlingKata
         {
             var isSpare = false;
 
-            if (PinsWithBall1 != 10 && PinsWithBall1 + PinsWithBall2 == 10)
+            if (PinsWithBall1 != TotalPins && PinsWithBall1 + PinsWithBall2 == TotalPins)
             {
                 isSpare = true;
             }
@@ -48,7 +47,7 @@ namespace BowlingKata
         {
             var isStrike = false;
 
-            if (PinsWithBall1 == 10)
+            if (PinsWithBall1 == TotalPins)
             {
                 isStrike = true;
             }
