@@ -52,11 +52,11 @@ namespace BowlingKata_UT
         }
 
         [Test]
-        public void ScoreNormalFrame_Returns_Zero_If_Ball1_Has_Not_Been_Rolled()
+        public void ScoreNormalFrame_Returns_Null_If_Ball1_Has_Not_Been_Rolled()
         {
-            const int ball1Pins = -1;
+            int? ball1Pins = null;
             const int ball2Pins = 2;
-            const int expectedFrameScore = 0;
+            int? expectedFrameScore = null;
 
             _frameToScore.Expect(f => f.PinsWithBall1).Return(ball1Pins);
             _frameToScore.Expect(f => f.PinsWithBall2).Return(ball2Pins);
@@ -70,7 +70,7 @@ namespace BowlingKata_UT
         public void ScoreNormalFrame_Does_Not_Include_Ball2_In_Score_If_It_Has_Not_Been_Rolled()
         {
             const int ball1Pins = 2;
-            const int ball2Pins = -1;
+            int? ball2Pins = null;
             const int expectedFrameScore = ball1Pins;
 
             _frameToScore.Expect(f => f.PinsWithBall1).Return(ball1Pins);
@@ -93,6 +93,16 @@ namespace BowlingKata_UT
         }
 
         [Test]
+        public void ScoreSpareFrame_Returns_Null_If_Frame_Not_A_Spare_Frame()
+        {
+            _frameToScore.Expect(f => f.IsSpare()).Return(false);
+
+            var actualFrameScore = _testObject.ScoreSpareFrame(_frameToScore, _subsequentFrame1);
+
+            Assert.That(actualFrameScore, Is.Null);
+        }
+
+        [Test]
         public void ScoreSpareFrame_Returns_Correct_Frame_Total()
         {
             const int subsequentFrameBall1Pins = 3;
@@ -109,7 +119,7 @@ namespace BowlingKata_UT
         [Test]
         public void ScoreSpareFrame_Does_Not_Include_SubsequentFrame_Ball1_In_Score_If_It_Has_Not_Been_Rolled()
         {
-            const int subsequentFrameBall1Pins = -1;
+            int? subsequentFrameBall1Pins = null;
             const int expectedFrameScore = TotalPins;
 
             _frameToScore.Expect(f => f.IsSpare()).Return(true);
@@ -131,6 +141,16 @@ namespace BowlingKata_UT
             _subsequentFrame1.Expect(f => f.PinsWithBall2).Return(subsequentFrame1Ball2Pins);
 
             _testObject.ScoreStrikeFrame(_frameToScore, _subsequentFrame1, _subsequentFrame2);
+        }
+
+        [Test]
+        public void ScoreStrikeFrame_Returns_Null_If_Frame_Not_A_Strike_Frame()
+        {
+            _frameToScore.Expect(f => f.IsStrike()).Return(false);
+
+            var actualFrameScore = _testObject.ScoreStrikeFrame(_frameToScore, _subsequentFrame1, _subsequentFrame2);
+
+            Assert.That(actualFrameScore, Is.Null);
         }
 
         [Test]
@@ -188,8 +208,8 @@ namespace BowlingKata_UT
         [Test]
         public void ScoreStrikeFrame_Does_Not_Include_SubsequentFrame1_Scores_In_Score_If_It_Has_Not_Been_Rolled()
         {
-            const int subsequentFrame1Ball1Pins = -1;
-            const int subsequentFrame1Ball2Pins = 4;
+            int? subsequentFrame1Ball1Pins = null;
+            int? subsequentFrame1Ball2Pins = null;
             const int expectedFrameScore = TotalPins;
 
             _frameToScore.Expect(f => f.IsStrike()).Return(true);
@@ -205,8 +225,8 @@ namespace BowlingKata_UT
         public void ScoreStrikeFrame_Does_Not_Include_SubsequentFrame2_Scores_In_Score_If_It_Has_Not_Been_Rolled()
         {
             const int subsequentFrame1Ball1Pins = TotalPins;
-            const int subsequentFrame1Ball2Pins = 0;
-            const int subsequentFrame2Ball1Pins = -1;
+            const int subsequentFrame1Ball2Pins = 5;
+            int? subsequentFrame2Ball1Pins = null;
             const int expectedFrameScore = TotalPins + subsequentFrame1Ball1Pins;
 
             _frameToScore.Expect(f => f.IsStrike()).Return(true);

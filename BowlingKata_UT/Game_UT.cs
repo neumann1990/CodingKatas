@@ -43,17 +43,6 @@ namespace BowlingKata_UT
             var nextFrameOfLastFrame = _testObject.Frames.ElementAt(9).NextFrame;
             Assert.That(nextFrameOfLastFrame, Is.Null);
         }
-        
-        [Test]
-        public void InitializeNewGame_Correctly_Initializes_Pin_Totals()
-        {
-            foreach (var frame in _testObject.Frames)
-            {
-                Assert.That(frame.PinsWithBall1, Is.EqualTo(-1));
-                Assert.That(frame.PinsWithBall2, Is.EqualTo(-1));
-                Assert.That(frame.FrameScore, Is.EqualTo(0));
-            }
-        }
 
         [Test]
         public void UpdateScore_Calls_Score_Engine_On_Each_Frame_With_Correct_Parameters()

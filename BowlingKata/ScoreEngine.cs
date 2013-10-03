@@ -2,7 +2,7 @@
 {
     public interface IScoreEngine
     {
-        int ScoreFrame(IFrame frameToScore, IFrame subsequentFrame1, IFrame subsequentFrame2);
+        int? ScoreFrame(IFrame frameToScore, IFrame subsequentFrame1, IFrame subsequentFrame2);
     }
 
     public class ScoreEngine : IScoreEngine
@@ -17,9 +17,9 @@
             _scoreCollaborator = scoreCollaborator;
         }
 
-        public int ScoreFrame(IFrame frameToScore, IFrame subsequentFrame1, IFrame subsequentFrame2)
+        public int? ScoreFrame(IFrame frameToScore, IFrame subsequentFrame1, IFrame subsequentFrame2)
         {
-            int frameScore;
+            int? frameScore;
 
             if(frameToScore.IsStrike())
             {

@@ -7,6 +7,17 @@ namespace BowlingKata_UT
     public class Frame_UT
     {
         [Test]
+        public void Constructor_Correctly_Initializes_Fields()
+        {
+            var frame = new Frame();
+
+            Assert.That(frame.PinsWithBall1, Is.Null);
+            Assert.That(frame.PinsWithBall2, Is.Null);
+            Assert.That(frame.FrameScore, Is.Null);
+            Assert.That(frame.NextFrame, Is.Null);
+        }
+
+        [Test]
         public void IsSpare_Returns_True_When_Given_Spare_Frame()
         {
             var frame = new Frame()

@@ -22,10 +22,10 @@ namespace BowlingKata
         {
             _scoreEngine = scoreEngine;
 
-            InitializeNewGame();
+            InitializeGame();
         }
 
-        public void InitializeNewGame()
+        public void InitializeGame()
         {
             Frames = new List<IFrame>
                          {
@@ -52,7 +52,7 @@ namespace BowlingKata
                 var frameScore = _scoreEngine.ScoreFrame(frameToScore, subsequentFrame1, subsequentFrame2);
                 frameToScore.FrameScore = frameScore;
 
-                totalScore += frameScore;
+                totalScore += frameScore.GetValueOrDefault(0);
             }
 
             return totalScore;

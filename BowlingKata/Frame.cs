@@ -4,10 +4,10 @@ namespace BowlingKata
     public interface IFrame
     {
         int TotalPins { get; }
-        int PinsWithBall1 { get; set; }
-        int PinsWithBall2 { get; set; }
+        int? PinsWithBall1 { get; set; }
+        int? PinsWithBall2 { get; set; }
 
-        int FrameScore { get; set; }
+        int? FrameScore { get; set; }
 
         IFrame NextFrame { get; set; }
 
@@ -19,16 +19,17 @@ namespace BowlingKata
     {
         public int TotalPins { get { return 10; } }
 
-        public int PinsWithBall1 { get; set; }
-        public int PinsWithBall2 { get; set; }
-        public int FrameScore { get; set; }
+        public int? PinsWithBall1 { get; set; }
+        public int? PinsWithBall2 { get; set; }
+        public int? FrameScore { get; set; }
         public IFrame NextFrame { get; set; }
 
         public Frame()
         {
-            PinsWithBall1 = -1;
-            PinsWithBall2 = -1;
-            FrameScore = 0;
+            PinsWithBall1 = null;
+            PinsWithBall2 = null;
+            FrameScore = null;
+            NextFrame = null;
         }
 
         public bool IsSpare()
