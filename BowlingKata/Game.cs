@@ -46,10 +46,7 @@ namespace BowlingKata
 
             foreach (var frameToScore in Frames)
             {
-                var subsequentFrame1 = frameToScore.NextFrame;
-                var subsequentFrame2 = subsequentFrame1 != null ? subsequentFrame1.NextFrame : null;
-
-                var frameScore = _scoreEngine.ScoreFrame(frameToScore, subsequentFrame1, subsequentFrame2);
+                var frameScore = _scoreEngine.ScoreFrame(frameToScore);
                 frameToScore.FrameScore = frameScore;
 
                 totalScore += frameScore.GetValueOrDefault(0);

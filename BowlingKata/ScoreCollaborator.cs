@@ -3,8 +3,8 @@
     public interface IScoreCollaborator
     {
         int? ScoreNormalFrame(IFrame frameToScore);
-        int? ScoreSpareFrame(IFrame frameToScore, IFrame subsequentFrame);
-        int? ScoreStrikeFrame(IFrame frameToScore, IFrame subsequentFrame1, IFrame subsequentFrame2);
+        int? ScoreSpareFrame(IFrame frameToScore);
+        int? ScoreStrikeFrame(IFrame frameToScore);
     }
 
     public class ScoreCollaborator : IScoreCollaborator
@@ -28,13 +28,14 @@
             return frameScore;
         }
 
-        public int? ScoreSpareFrame(IFrame frameToScore, IFrame subsequentFrame)
+        public int? ScoreSpareFrame(IFrame frameToScore)
         {
             if(!frameToScore.IsSpare())
             {
                 return null;
             }
 
+            var subsequentFrame = frameToScore.NextFrame;
             var subsequentFrameBall1Pins = subsequentFrame.PinsWithBall1;
 
             var frameScore = frameToScore.TotalPins;
@@ -47,32 +48,41 @@
             return frameScore;
         }
 
-        public int? ScoreStrikeFrame(IFrame frameToScore, IFrame subsequentFrame1, IFrame subsequentFrame2)
+        public int? ScoreStrikeFrame(IFrame frameToScore)
         {
             if (!frameToScore.IsStrike())
             {
                 return null;
             }
 
-            var subsequentFrame1Ball1Pins = subsequentFrame1.PinsWithBall1;
-            var subsequentFrame1Ball2Pins = subsequentFrame1.PinsWithBall2;
-            var subsequentFrame2Ball1Pins = subsequentFrame2.PinsWithBall1;
-
             var frameScore = frameToScore.TotalPins;
-            if(!subsequentFrame1Ball1Pins.HasValue)
+
+            var subsequentFrame1 = frameToScore.NextFrame;
+            if (subsequentFrame1 == null || !subsequentFrame1.PinsWithBall1.HasValue)
             {
                 return frameScore;
             }
 
-            frameScore += subsequentFrame1Ball1Pins.GetValueOrDefault(0);
+            var frame1Ball1Pins = subsequentFrame1.PinsWithBall1;
+            var frame1Ball2Pins = subsequentFrame1.PinsWithBall2;
 
-            if (subsequentFrame1Ball1Pins == subsequentFrame1.TotalPins && subsequentFrame2Ball1Pins > 0)
+            frameScore += frame1Ball1Pins.Value;
+
+            var subsequentFrame2 = subsequentFrame1.NextFrame;
+            if(subsequentFrame2 == null)
             {
-                frameScore += subsequentFrame2Ball1Pins.GetValueOrDefault(0);
+                return frameScore;
             }
-            else if (subsequentFrame1Ball1Pins != subsequentFrame1.TotalPins && subsequentFrame1Ball2Pins > 0)
+
+            var frame2Ball1Pins = subsequentFrame2.PinsWithBall1;
+
+            if (subsequentFrame1.IsStrike() && frame2Ball1Pins.HasValue)
             {
-                frameScore += subsequentFrame1Ball2Pins.GetValueOrDefault(0);                
+                frameScore += frame2Ball1Pins.Value;
+            }
+            else if (frame1Ball2Pins.HasValue)
+            {
+                frameScore += frame1Ball2Pins.Value;                
             }
 
             return frameScore;

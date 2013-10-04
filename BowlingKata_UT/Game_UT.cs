@@ -50,13 +50,11 @@ namespace BowlingKata_UT
             for(var index = 0; index < 8; index++)
             {
                 var frameToScore = _testObject.Frames.ElementAt(index);
-                var subsequentFrame1 = frameToScore.NextFrame;
-                var subsequentFrame2 = subsequentFrame1.NextFrame;
-                _scoreEngine.Expect(s => s.ScoreFrame(frameToScore, subsequentFrame1, subsequentFrame2)).Return(0);
+                _scoreEngine.Expect(s => s.ScoreFrame(frameToScore)).Return(0);
             }
 
             var lastFrameToScore = _testObject.Frames.ElementAt(9);
-            _scoreEngine.Expect(s => s.ScoreFrame(lastFrameToScore, null, null)).Return(0);
+            _scoreEngine.Expect(s => s.ScoreFrame(lastFrameToScore)).Return(0);
 
             _testObject.UpdateScore();
         }
@@ -70,13 +68,11 @@ namespace BowlingKata_UT
             for (var index = 0; index <= secondToLastFrameIndex; index++)
             {
                 var frameToScore = _testObject.Frames.ElementAt(index);
-                var subsequentFrame1 = frameToScore.NextFrame;
-                var subsequentFrame2 = subsequentFrame1.NextFrame;
-                _scoreEngine.Expect(s => s.ScoreFrame(frameToScore, subsequentFrame1, subsequentFrame2)).Return(index);
+                _scoreEngine.Expect(s => s.ScoreFrame(frameToScore)).Return(index);
             }
 
             var lastFrameToScore = _testObject.Frames.ElementAt(lastFrameIndex);
-            _scoreEngine.Expect(s => s.ScoreFrame(lastFrameToScore, null, null)).Return(lastFrameIndex);
+            _scoreEngine.Expect(s => s.ScoreFrame(lastFrameToScore)).Return(lastFrameIndex);
 
             _testObject.UpdateScore();
 
@@ -90,10 +86,7 @@ namespace BowlingKata_UT
         [Test]
         public void UpdateScore_Returns_Correct_TotalScore()
         {
-            _scoreEngine.Expect(s => s.ScoreFrame(Arg<Frame>.Is.Anything, 
-                                                    Arg<Frame>.Is.Anything, 
-                                                    Arg<Frame>.Is.Anything)
-                                ).Return(1).Repeat.Any();
+            _scoreEngine.Expect(s => s.ScoreFrame(Arg<Frame>.Is.Anything)).Return(1).Repeat.Any();
 
             var actualTotalScore = _testObject.UpdateScore();
 

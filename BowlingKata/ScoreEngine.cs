@@ -2,7 +2,7 @@
 {
     public interface IScoreEngine
     {
-        int? ScoreFrame(IFrame frameToScore, IFrame subsequentFrame1, IFrame subsequentFrame2);
+        int? ScoreFrame(IFrame frameToScore);
     }
 
     public class ScoreEngine : IScoreEngine
@@ -17,17 +17,17 @@
             _scoreCollaborator = scoreCollaborator;
         }
 
-        public int? ScoreFrame(IFrame frameToScore, IFrame subsequentFrame1, IFrame subsequentFrame2)
+        public int? ScoreFrame(IFrame frameToScore)
         {
             int? frameScore;
 
             if(frameToScore.IsStrike())
             {
-                frameScore = _scoreCollaborator.ScoreStrikeFrame(frameToScore, subsequentFrame1, subsequentFrame2);
+                frameScore = _scoreCollaborator.ScoreStrikeFrame(frameToScore);
             }
             else if(frameToScore.IsSpare())
             {
-                frameScore = _scoreCollaborator.ScoreSpareFrame(frameToScore, subsequentFrame1);
+                frameScore = _scoreCollaborator.ScoreSpareFrame(frameToScore);
             }
             else
             {

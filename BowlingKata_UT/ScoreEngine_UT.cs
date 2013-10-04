@@ -29,13 +29,11 @@ namespace BowlingKata_UT
             const int expectedFrameScore = 1;
 
             var frameToScore = MockRepository.GenerateMock<IFrame>();
-            var subsequentFrame1 = MockRepository.GenerateMock<IFrame>();
-            var subsequentFrame2 = MockRepository.GenerateMock<IFrame>();
 
             frameToScore.Expect(f => f.IsStrike()).Return(true);
-            _scoreCollaborator.Expect(s => s.ScoreStrikeFrame(frameToScore, subsequentFrame1, subsequentFrame2)).Return(expectedFrameScore);
+            _scoreCollaborator.Expect(s => s.ScoreStrikeFrame(frameToScore)).Return(expectedFrameScore);
 
-            var actualFrameScore = _testObject.ScoreFrame(frameToScore, subsequentFrame1, subsequentFrame2);
+            var actualFrameScore = _testObject.ScoreFrame(frameToScore);
             Assert.That(actualFrameScore, Is.EqualTo(expectedFrameScore));
         }
 
@@ -45,14 +43,12 @@ namespace BowlingKata_UT
             const int expectedFrameScore = 1;
 
             var frameToScore = MockRepository.GenerateMock<IFrame>();
-            var subsequentFrame1 = MockRepository.GenerateMock<IFrame>();
-            var subsequentFrame2 = MockRepository.GenerateMock<IFrame>();
 
             frameToScore.Expect(f => f.IsStrike()).Return(false);
             frameToScore.Expect(f => f.IsSpare()).Return(true);
-            _scoreCollaborator.Expect(s => s.ScoreSpareFrame(frameToScore, subsequentFrame1)).Return(expectedFrameScore);
+            _scoreCollaborator.Expect(s => s.ScoreSpareFrame(frameToScore)).Return(expectedFrameScore);
 
-            var actualFrameScore = _testObject.ScoreFrame(frameToScore, subsequentFrame1, subsequentFrame2);
+            var actualFrameScore = _testObject.ScoreFrame(frameToScore);
             Assert.That(actualFrameScore, Is.EqualTo(expectedFrameScore));
         }
 
@@ -62,14 +58,12 @@ namespace BowlingKata_UT
             const int expectedFrameScore = 1;
 
             var frameToScore = MockRepository.GenerateMock<IFrame>();
-            var subsequentFrame1 = MockRepository.GenerateMock<IFrame>();
-            var subsequentFrame2 = MockRepository.GenerateMock<IFrame>();
 
             frameToScore.Expect(f => f.IsStrike()).Return(false);
             frameToScore.Expect(f => f.IsSpare()).Return(false);
             _scoreCollaborator.Expect(s => s.ScoreNormalFrame(frameToScore)).Return(expectedFrameScore);
 
-            var actualFrameScore = _testObject.ScoreFrame(frameToScore, subsequentFrame1, subsequentFrame2);
+            var actualFrameScore = _testObject.ScoreFrame(frameToScore);
             Assert.That(actualFrameScore, Is.EqualTo(expectedFrameScore));
         }
 

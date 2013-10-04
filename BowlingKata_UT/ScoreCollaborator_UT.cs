@@ -87,9 +87,10 @@ namespace BowlingKata_UT
             const int subsequentFrameBall1Pins = 1;
 
             _frameToScore.Expect(f => f.IsSpare()).Return(true);
+            _frameToScore.Expect(f => f.NextFrame).Return(_subsequentFrame1);
             _subsequentFrame1.Expect(f => f.PinsWithBall1).Return(subsequentFrameBall1Pins);
 
-            _testObject.ScoreSpareFrame(_frameToScore, _subsequentFrame1);
+            _testObject.ScoreSpareFrame(_frameToScore);
         }
 
         [Test]
@@ -97,7 +98,7 @@ namespace BowlingKata_UT
         {
             _frameToScore.Expect(f => f.IsSpare()).Return(false);
 
-            var actualFrameScore = _testObject.ScoreSpareFrame(_frameToScore, _subsequentFrame1);
+            var actualFrameScore = _testObject.ScoreSpareFrame(_frameToScore);
 
             Assert.That(actualFrameScore, Is.Null);
         }
@@ -109,9 +110,10 @@ namespace BowlingKata_UT
             const int expectedFrameScore = TotalPins + subsequentFrameBall1Pins;
 
             _frameToScore.Expect(f => f.IsSpare()).Return(true);
+            _frameToScore.Expect(f => f.NextFrame).Return(_subsequentFrame1);
             _subsequentFrame1.Expect(f => f.PinsWithBall1).Return(subsequentFrameBall1Pins);
 
-            var actualFrameScore = _testObject.ScoreSpareFrame(_frameToScore, _subsequentFrame1);
+            var actualFrameScore = _testObject.ScoreSpareFrame(_frameToScore);
 
             Assert.That(actualFrameScore, Is.EqualTo(expectedFrameScore));
         }
@@ -123,9 +125,10 @@ namespace BowlingKata_UT
             const int expectedFrameScore = TotalPins;
 
             _frameToScore.Expect(f => f.IsSpare()).Return(true);
+            _frameToScore.Expect(f => f.NextFrame).Return(_subsequentFrame1);
             _subsequentFrame1.Expect(f => f.PinsWithBall1).Return(subsequentFrameBall1Pins);
 
-            var actualFrameScore = _testObject.ScoreSpareFrame(_frameToScore, _subsequentFrame1);
+            var actualFrameScore = _testObject.ScoreSpareFrame(_frameToScore);
 
             Assert.That(actualFrameScore, Is.EqualTo(expectedFrameScore));
         }
@@ -137,10 +140,13 @@ namespace BowlingKata_UT
             const int subsequentFrame1Ball2Pins = 4;
 
             _frameToScore.Expect(f => f.IsStrike()).Return(true);
+            _frameToScore.Expect(f => f.NextFrame).Return(_subsequentFrame1);
+
+            _subsequentFrame1.Expect(s => s.NextFrame).Return(_subsequentFrame2);
             _subsequentFrame1.Expect(f => f.PinsWithBall1).Return(subsequentFrame1Ball1Pins);
             _subsequentFrame1.Expect(f => f.PinsWithBall2).Return(subsequentFrame1Ball2Pins);
 
-            _testObject.ScoreStrikeFrame(_frameToScore, _subsequentFrame1, _subsequentFrame2);
+            _testObject.ScoreStrikeFrame(_frameToScore);
         }
 
         [Test]
@@ -148,7 +154,7 @@ namespace BowlingKata_UT
         {
             _frameToScore.Expect(f => f.IsStrike()).Return(false);
 
-            var actualFrameScore = _testObject.ScoreStrikeFrame(_frameToScore, _subsequentFrame1, _subsequentFrame2);
+            var actualFrameScore = _testObject.ScoreStrikeFrame(_frameToScore);
 
             Assert.That(actualFrameScore, Is.Null);
         }
@@ -161,10 +167,13 @@ namespace BowlingKata_UT
             const int expectedFrameScore = TotalPins + subsequentFrame1Ball1Pins + subsequentFrame1Ball2Pins;
 
             _frameToScore.Expect(f => f.IsStrike()).Return(true);
+            _frameToScore.Expect(f => f.NextFrame).Return(_subsequentFrame1);
+
+            _subsequentFrame1.Expect(s => s.NextFrame).Return(_subsequentFrame2); 
             _subsequentFrame1.Expect(f => f.PinsWithBall1).Return(subsequentFrame1Ball1Pins);
             _subsequentFrame1.Expect(f => f.PinsWithBall2).Return(subsequentFrame1Ball2Pins);
 
-            var actualFrameScore = _testObject.ScoreStrikeFrame(_frameToScore, _subsequentFrame1, _subsequentFrame2);
+            var actualFrameScore = _testObject.ScoreStrikeFrame(_frameToScore);
 
             Assert.That(actualFrameScore, Is.EqualTo(expectedFrameScore));
         }
@@ -178,11 +187,15 @@ namespace BowlingKata_UT
             const int expectedFrameScore = TotalPins + subsequentFrame1Ball1Pins + subsequentFrame1Ball2Pins;
 
             _frameToScore.Expect(f => f.IsStrike()).Return(true);
+            _frameToScore.Expect(f => f.NextFrame).Return(_subsequentFrame1);
+
+            _subsequentFrame1.Expect(s => s.NextFrame).Return(_subsequentFrame2);
             _subsequentFrame1.Expect(f => f.PinsWithBall1).Return(subsequentFrame1Ball1Pins);
             _subsequentFrame1.Expect(f => f.PinsWithBall2).Return(subsequentFrame1Ball2Pins);
+
             _subsequentFrame2.Expect(f => f.PinsWithBall1).Return(subsequentFrame2Ball1Pins);
 
-            var actualFrameScore = _testObject.ScoreStrikeFrame(_frameToScore, _subsequentFrame1, _subsequentFrame2);
+            var actualFrameScore = _testObject.ScoreStrikeFrame(_frameToScore);
 
             Assert.That(actualFrameScore, Is.EqualTo(expectedFrameScore));
         }
@@ -197,10 +210,15 @@ namespace BowlingKata_UT
 
             _frameToScore.Expect(f => f.IsStrike()).Return(true);
             _subsequentFrame1.Expect(f => f.PinsWithBall1).Return(subsequentFrame1Ball1Pins);
+            _frameToScore.Expect(f => f.NextFrame).Return(_subsequentFrame1);
+
+            _subsequentFrame1.Expect(s => s.NextFrame).Return(_subsequentFrame2);
+            _subsequentFrame1.Expect(f => f.IsStrike()).Return(true);
+
             _subsequentFrame1.Expect(f => f.PinsWithBall2).Return(subsequentFrame1Ball2Pins);
             _subsequentFrame2.Expect(f => f.PinsWithBall1).Return(subsequentFrame2Ball1Pins);
 
-            var actualFrameScore = _testObject.ScoreStrikeFrame(_frameToScore, _subsequentFrame1, _subsequentFrame2);
+            var actualFrameScore = _testObject.ScoreStrikeFrame(_frameToScore);
 
             Assert.That(actualFrameScore, Is.EqualTo(expectedFrameScore));
         }
@@ -208,15 +226,12 @@ namespace BowlingKata_UT
         [Test]
         public void ScoreStrikeFrame_Does_Not_Include_SubsequentFrame1_Scores_In_Score_If_It_Has_Not_Been_Rolled()
         {
-            int? subsequentFrame1Ball1Pins = null;
-            int? subsequentFrame1Ball2Pins = null;
             const int expectedFrameScore = TotalPins;
 
             _frameToScore.Expect(f => f.IsStrike()).Return(true);
-            _subsequentFrame1.Expect(f => f.PinsWithBall1).Return(subsequentFrame1Ball1Pins);
-            _subsequentFrame1.Expect(f => f.PinsWithBall2).Return(subsequentFrame1Ball2Pins);
+            _frameToScore.Expect(f => f.NextFrame).Return(_subsequentFrame1);
 
-            var actualFrameScore = _testObject.ScoreStrikeFrame(_frameToScore, _subsequentFrame1, _subsequentFrame2);
+            var actualFrameScore = _testObject.ScoreStrikeFrame(_frameToScore);
 
             Assert.That(actualFrameScore, Is.EqualTo(expectedFrameScore));
         }
@@ -225,16 +240,50 @@ namespace BowlingKata_UT
         public void ScoreStrikeFrame_Does_Not_Include_SubsequentFrame2_Scores_In_Score_If_It_Has_Not_Been_Rolled()
         {
             const int subsequentFrame1Ball1Pins = TotalPins;
-            const int subsequentFrame1Ball2Pins = 5;
             int? subsequentFrame2Ball1Pins = null;
             const int expectedFrameScore = TotalPins + subsequentFrame1Ball1Pins;
 
             _frameToScore.Expect(f => f.IsStrike()).Return(true);
+            _frameToScore.Expect(f => f.NextFrame).Return(_subsequentFrame1);
+
+            _subsequentFrame1.Expect(s => s.NextFrame).Return(_subsequentFrame2);
+            _subsequentFrame1.Expect(s => s.IsStrike()).Return(true);
             _subsequentFrame1.Expect(f => f.PinsWithBall1).Return(subsequentFrame1Ball1Pins);
-            _subsequentFrame1.Expect(f => f.PinsWithBall2).Return(subsequentFrame1Ball2Pins);
             _subsequentFrame2.Expect(f => f.PinsWithBall1).Return(subsequentFrame2Ball1Pins);
 
-            var actualFrameScore = _testObject.ScoreStrikeFrame(_frameToScore, _subsequentFrame1, _subsequentFrame2);
+            var actualFrameScore = _testObject.ScoreStrikeFrame(_frameToScore);
+
+            Assert.That(actualFrameScore, Is.EqualTo(expectedFrameScore));
+        }
+
+        [Test]
+        public void ScoreStrikeFrame_Handles_Null_Subsequent_Frame_1()
+        {
+            const int expectedFrameScore = TotalPins;
+
+            _frameToScore.Expect(f => f.IsStrike()).Return(true);
+            _frameToScore.Expect(f => f.NextFrame).Return(null);
+
+            var actualFrameScore = _testObject.ScoreStrikeFrame(_frameToScore);
+
+            Assert.That(actualFrameScore, Is.EqualTo(expectedFrameScore));
+        }
+
+        [Test]
+        public void ScoreStrikeFrame_Handles_Null_Subsequent_Frame_2()
+        {
+            const int subsequentFrame1Ball1Pins = TotalPins;
+            const int subsequentFrame1Ball2Pins = 5;
+            const int expectedFrameScore = TotalPins + subsequentFrame1Ball1Pins;
+
+            _frameToScore.Expect(f => f.IsStrike()).Return(true);
+            _frameToScore.Expect(f => f.NextFrame).Return(_subsequentFrame1);
+
+            _subsequentFrame1.Expect(s => s.NextFrame).Return(null);
+            _subsequentFrame1.Expect(f => f.PinsWithBall1).Return(subsequentFrame1Ball1Pins);
+            _subsequentFrame1.Expect(f => f.PinsWithBall2).Return(subsequentFrame1Ball2Pins);
+
+            var actualFrameScore = _testObject.ScoreStrikeFrame(_frameToScore);
 
             Assert.That(actualFrameScore, Is.EqualTo(expectedFrameScore));
         }
