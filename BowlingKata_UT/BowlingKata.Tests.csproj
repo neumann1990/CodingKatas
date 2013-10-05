@@ -8,8 +8,8 @@
     <ProjectGuid>{85ACCEE2-D647-463F-810F-F57A73F67034}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BowlingKata_UT</RootNamespace>
-    <AssemblyName>BowlingKata_UT</AssemblyName>
+    <RootNamespace>BowlingKata.Tests</RootNamespace>
+    <AssemblyName>BowlingKata.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BowlingKata_IT.cs" />
     <Compile Include="Frame_UT.cs" />
     <Compile Include="Game_UT.cs" />
     <Compile Include="Scorers\NormalFrameScorer_UT.cs" />

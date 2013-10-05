@@ -1,9 +1,8 @@
 ﻿using System.Linq;
-using BowlingKata;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace BowlingKata_UT
+namespace BowlingKata.Tests
 {
     [TestFixture]
     public class Game_UT

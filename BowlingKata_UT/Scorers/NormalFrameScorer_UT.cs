@@ -1,8 +1,7 @@
-﻿using BowlingKata;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace BowlingKata_UT
+namespace BowlingKata.Tests.Scorers
 {
     [TestFixture]
     public class NormalFrameScorer_UT

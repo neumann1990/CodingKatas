@@ -1,9 +1,8 @@
-﻿using BowlingKata;
-using BowlingKata.Scorers;
+﻿using BowlingKata.Scorers;
 using NUnit.Framework;
 using Rhino.Mocks;
 
-namespace BowlingKata_UT.Scorers
+namespace BowlingKata.Tests.Scorers
 {
     [TestFixture]
     public class SpareFrameScorer_UT

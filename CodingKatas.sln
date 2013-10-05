@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BowlingKata", "BowlingKata\BowlingKata.csproj", "{D51AE94A-1834-428B-94FF-E3A6CAE3606B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BowlingKata_UT", "BowlingKata_UT\BowlingKata_UT.csproj", "{85ACCEE2-D647-463F-810F-F57A73F67034}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BowlingKata.Tests", "BowlingKata_UT\BowlingKata.Tests.csproj", "{85ACCEE2-D647-463F-810F-F57A73F67034}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

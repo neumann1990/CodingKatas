@@ -1,7 +1,6 @@
-﻿using BowlingKata;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
-namespace BowlingKata_UT
+namespace BowlingKata.Tests
 {
     [TestFixture]
     public class Frame_UT
