@@ -45,7 +45,6 @@
     <Compile Include="Scorers\IFrameScorer.cs" />
     <Compile Include="Scorers\NormalFrameScorer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScoreCollaborator.cs" />
     <Compile Include="ScorerFactory.cs" />
     <Compile Include="Scorers\SpareFrameScorer.cs" />
     <Compile Include="Scorers\StrikeFrameScorer.cs" />

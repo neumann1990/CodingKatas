@@ -51,7 +51,6 @@
     <Compile Include="Frame_UT.cs" />
     <Compile Include="Game_UT.cs" />
     <Compile Include="Scorers\NormalFrameScorer_UT.cs" />
-    <Compile Include="ScoreCollaborator_UT.cs" />
     <Compile Include="ScorerFactory_UT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scorers\SpareFrameScorer_UT.cs" />
