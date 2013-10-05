@@ -8,20 +8,23 @@ namespace BowlingKata_UT
     [TestFixture]
     public class Game_UT
     {
+        private IScorerFactory _scorerFactory;
+        private IFrameScorer _frameScorer;
         private Game _testObject;
-        private IScoreEngine _scoreEngine;
 
         [SetUp]
         public void SetUp()
         {
-            _scoreEngine = MockRepository.GenerateMock<IScoreEngine>();
-            _testObject = new Game(_scoreEngine);
+            _scorerFactory = MockRepository.GenerateMock<IScorerFactory>();
+            _frameScorer = MockRepository.GenerateMock<IFrameScorer>();
+            _testObject = new Game(_scorerFactory);
         }
 
         [TearDown]
         public void TearDown()
         {
-            _scoreEngine.VerifyAllExpectations();
+            _scorerFactory.VerifyAllExpectations();
+            _frameScorer.VerifyAllExpectations();
         }
 
         [Test]
@@ -47,14 +50,12 @@ namespace BowlingKata_UT
         [Test]
         public void UpdateScore_Calls_Score_Engine_On_Each_Frame_With_Correct_Parameters()
         {
-            for(var index = 0; index < 8; index++)
+            for(var index = 0; index < _testObject.Frames.Count; index++)
             {
                 var frameToScore = _testObject.Frames.ElementAt(index);
-                _scoreEngine.Expect(s => s.ScoreFrame(frameToScore)).Return(0);
+                _scorerFactory.Expect(s => s.GetScorer(frameToScore)).Return(_frameScorer);
+                _frameScorer.Expect(f => f.ScoreFrame(frameToScore)).Return(1);
             }
-
-            var lastFrameToScore = _testObject.Frames.ElementAt(9);
-            _scoreEngine.Expect(s => s.ScoreFrame(lastFrameToScore)).Return(0);
 
             _testObject.UpdateScore();
         }
@@ -62,35 +63,39 @@ namespace BowlingKata_UT
         [Test]
         public void UpdateScore_Correctly_Sets_Individual_Frame_Totals()
         {
-            var lastFrameIndex = _testObject.Frames.Count - 1 ;
-            var secondToLastFrameIndex = _testObject.Frames.Count - 2;
+            const int frameScore = 2;
 
-            for (var index = 0; index <= secondToLastFrameIndex; index++)
+            for (var index = 0; index < _testObject.Frames.Count; index++)
             {
                 var frameToScore = _testObject.Frames.ElementAt(index);
-                _scoreEngine.Expect(s => s.ScoreFrame(frameToScore)).Return(index);
+                _scorerFactory.Expect(s => s.GetScorer(frameToScore)).Return(_frameScorer);
+                _frameScorer.Expect(f => f.ScoreFrame(frameToScore)).Return(frameScore);
             }
-
-            var lastFrameToScore = _testObject.Frames.ElementAt(lastFrameIndex);
-            _scoreEngine.Expect(s => s.ScoreFrame(lastFrameToScore)).Return(lastFrameIndex);
 
             _testObject.UpdateScore();
 
-            for (var index = 0; index <= lastFrameIndex; index++)
+            for (var index = 0; index < _testObject.Frames.Count; index++)
             {
-                var frameScore = _testObject.Frames.ElementAt(index).FrameScore;
-                Assert.That(frameScore, Is.EqualTo(index));
+                var currentFrameScore = _testObject.Frames.ElementAt(index).FrameScore;
+                Assert.That(currentFrameScore, Is.EqualTo(frameScore));
             }
         }
 
         [Test]
         public void UpdateScore_Returns_Correct_TotalScore()
         {
-            _scoreEngine.Expect(s => s.ScoreFrame(Arg<Frame>.Is.Anything)).Return(1).Repeat.Any();
+            const int frameScore = 2;
+
+            for (var index = 0; index < _testObject.Frames.Count; index++)
+            {
+                var frameToScore = _testObject.Frames.ElementAt(index);
+                _scorerFactory.Expect(s => s.GetScorer(frameToScore)).Return(_frameScorer);
+                _frameScorer.Expect(f => f.ScoreFrame(frameToScore)).Return(frameScore);
+            }
 
             var actualTotalScore = _testObject.UpdateScore();
 
-            Assert.That(actualTotalScore, Is.EqualTo(10));
+            Assert.That(actualTotalScore, Is.EqualTo(frameScore * _testObject.Frames.Count));
         }
     }
 }

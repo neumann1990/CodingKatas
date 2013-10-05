@@ -1,70 +1,54 @@
 ﻿using BowlingKata;
+using BowlingKata.Scorers;
 using NUnit.Framework;
 using Rhino.Mocks;
 
 namespace BowlingKata_UT
 {
     [TestFixture]
-    public class ScoreEngine_UT
+    public class ScorerFactory_UT
     {
-        private IScoreCollaborator _scoreCollaborator;
-        private ScoreEngine _testObject;
+        private ScorerFactory _testObject;
 
         [SetUp]
         public void SetUp()
         {
-            _scoreCollaborator = MockRepository.GenerateMock<IScoreCollaborator>();
-            _testObject = new ScoreEngine(_scoreCollaborator);
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            _scoreCollaborator.VerifyAllExpectations();
+            _testObject = new ScorerFactory();
         }
 
         [Test]
-        public void ScoreFrame_Calls_Collaborator_To_Score_Strike_Frame()
+        public void GetScorer_Returns_Correct_Scorer_For_Strike_Frame()
         {
-            const int expectedFrameScore = 1;
-
             var frameToScore = MockRepository.GenerateMock<IFrame>();
 
             frameToScore.Expect(f => f.IsStrike()).Return(true);
-            _scoreCollaborator.Expect(s => s.ScoreStrikeFrame(frameToScore)).Return(expectedFrameScore);
 
-            var actualFrameScore = _testObject.ScoreFrame(frameToScore);
-            Assert.That(actualFrameScore, Is.EqualTo(expectedFrameScore));
+            var actualFrameScorer = _testObject.GetScorer(frameToScore);
+            Assert.That(actualFrameScorer, Is.TypeOf(typeof(StrikeFrameScorer)));
         }
 
         [Test]
-        public void ScoreFrame_Calls_Collaborator_To_Score_Spare_Frame()
+        public void GetScorer_Returns_Correct_Scorer_For_Spare_Frame()
         {
-            const int expectedFrameScore = 1;
-
             var frameToScore = MockRepository.GenerateMock<IFrame>();
 
             frameToScore.Expect(f => f.IsStrike()).Return(false);
             frameToScore.Expect(f => f.IsSpare()).Return(true);
-            _scoreCollaborator.Expect(s => s.ScoreSpareFrame(frameToScore)).Return(expectedFrameScore);
 
-            var actualFrameScore = _testObject.ScoreFrame(frameToScore);
-            Assert.That(actualFrameScore, Is.EqualTo(expectedFrameScore));
+            var actualFrameScorer = _testObject.GetScorer(frameToScore);
+            Assert.That(actualFrameScorer, Is.TypeOf(typeof(SpareFrameScorer)));
         }
 
         [Test]
         public void ScoreFrame_Calls_Collaborator_To_Score_Normal_Frame()
         {
-            const int expectedFrameScore = 1;
-
             var frameToScore = MockRepository.GenerateMock<IFrame>();
 
             frameToScore.Expect(f => f.IsStrike()).Return(false);
             frameToScore.Expect(f => f.IsSpare()).Return(false);
-            _scoreCollaborator.Expect(s => s.ScoreNormalFrame(frameToScore)).Return(expectedFrameScore);
 
-            var actualFrameScore = _testObject.ScoreFrame(frameToScore);
-            Assert.That(actualFrameScore, Is.EqualTo(expectedFrameScore));
+            var actualFrameScorer = _testObject.GetScorer(frameToScore);
+            Assert.That(actualFrameScorer, Is.TypeOf(typeof(NormalFrameScorer)));
         }
 
         /*[Test]

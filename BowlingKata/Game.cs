@@ -13,14 +13,14 @@ namespace BowlingKata
     {
         public List<IFrame> Frames { get; private set; }
 
-        private readonly IScoreEngine _scoreEngine;
+        private const int DefaultFrameNumber = 10;
+        private readonly IScorerFactory _scorerFactory;
 
+        public Game() : this(new ScorerFactory()){}
 
-        public Game() : this(new ScoreEngine()){}
-
-        public Game(IScoreEngine scoreEngine)
+        public Game(IScorerFactory scorerFactory)
         {
-            _scoreEngine = scoreEngine;
+            _scorerFactory = scorerFactory;
 
             InitializeGame();
         }
@@ -32,10 +32,10 @@ namespace BowlingKata
                              new Frame()
                          };
 
-            for(var index = 1; index < 10; index++)
+            for (var index = 0; index < DefaultFrameNumber - 1; index++)
             {
                 var newFrame = new Frame();
-                Frames.ElementAt(index-1).NextFrame = newFrame;
+                Frames.ElementAt(index).NextFrame = newFrame;
                 Frames.Add(newFrame);
             }
         }
@@ -46,10 +46,10 @@ namespace BowlingKata
 
             foreach (var frameToScore in Frames)
             {
-                var frameScore = _scoreEngine.ScoreFrame(frameToScore);
-                frameToScore.FrameScore = frameScore;
+                var frameScorer = _scorerFactory.GetScorer(frameToScore);
+                frameToScore.FrameScore = frameScorer.ScoreFrame(frameToScore);
 
-                totalScore += frameScore.GetValueOrDefault(0);
+                totalScore += frameToScore.FrameScore.GetValueOrDefault(0);
             }
 
             return totalScore;
