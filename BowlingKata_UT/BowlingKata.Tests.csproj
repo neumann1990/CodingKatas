@@ -50,7 +50,7 @@
   <ItemGroup>
     <Compile Include="BowlingKata_IT.cs" />
     <Compile Include="Frame_UT.cs" />
-    <Compile Include="Game_UT.cs" />
+    <Compile Include="BowlingGame_UT.cs" />
     <Compile Include="Scorers\NormalFrameScorer_UT.cs" />
     <Compile Include="ScorerFactory_UT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

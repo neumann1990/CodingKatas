@@ -5,18 +5,18 @@ using Rhino.Mocks;
 namespace BowlingKata.Tests
 {
     [TestFixture]
-    public class Game_UT
+    public class BowlingGame_UT
     {
         private IScorerFactory _scorerFactory;
         private IFrameScorer _frameScorer;
-        private Game _testObject;
+        private BowlingGame _testObject;
 
         [SetUp]
         public void SetUp()
         {
             _scorerFactory = MockRepository.GenerateMock<IScorerFactory>();
             _frameScorer = MockRepository.GenerateMock<IFrameScorer>();
-            _testObject = new Game(_scorerFactory);
+            _testObject = new BowlingGame(_scorerFactory);
         }
 
         [TearDown]
@@ -33,9 +33,15 @@ namespace BowlingKata.Tests
         }
 
         [Test]
-        public void InitializeNewGame_Initializes_Frames_Collection_Correct_NextFrame_Pointers()
+        public void InitializeNewGame_Initializes_CurrentFrame_Pointer()
         {
-            for (var index = 0; index < 9; index++ )
+            Assert.That(_testObject.CurrentFrame, Is.EqualTo(_testObject.Frames.ElementAt(0)));
+        }
+
+        [Test]
+        public void InitializeNewGame_Initializes_Frames_NextFrame_Pointers()
+        {
+            for (var index = 0; index < _testObject.Frames.Count - 1; index++ )
             {
                 var currentFrame = _testObject.Frames.ElementAt(index);
                 var nextFrame = _testObject.Frames.ElementAt(index + 1);
@@ -44,6 +50,20 @@ namespace BowlingKata.Tests
 
             var nextFrameOfLastFrame = _testObject.Frames.ElementAt(9).NextFrame;
             Assert.That(nextFrameOfLastFrame, Is.Null);
+        }
+
+        [Test]
+        public void InitializeNewGame_Initializes_Frames_PrevFrame_Pointers()
+        {
+            var firstFramesPrevFrame = _testObject.Frames.ElementAt(0).PrevFrame;
+            Assert.That(firstFramesPrevFrame, Is.Null);
+
+            for (var index = 1; index < _testObject.Frames.Count; index++)
+            {
+                var currentFrame = _testObject.Frames.ElementAt(index);
+                var prevFrame = _testObject.Frames.ElementAt(index - 1);
+                Assert.That(currentFrame.PrevFrame, Is.SameAs(prevFrame));
+            }
         }
 
         [Test]

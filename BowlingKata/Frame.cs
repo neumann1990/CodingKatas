@@ -4,12 +4,14 @@ namespace BowlingKata
     public interface IFrame
     {
         int TotalPins { get; }
+
         int? PinsWithBall1 { get; set; }
         int? PinsWithBall2 { get; set; }
 
         int? FrameScore { get; set; }
 
         IFrame NextFrame { get; set; }
+        IFrame PrevFrame { get; set; }
 
         bool IsSpare();
         bool IsStrike();
@@ -21,16 +23,11 @@ namespace BowlingKata
 
         public int? PinsWithBall1 { get; set; }
         public int? PinsWithBall2 { get; set; }
-        public int? FrameScore { get; set; }
-        public IFrame NextFrame { get; set; }
 
-        public Frame()
-        {
-            PinsWithBall1 = null;
-            PinsWithBall2 = null;
-            FrameScore = null;
-            NextFrame = null;
-        }
+        public int? FrameScore { get; set; }
+
+        public IFrame NextFrame { get; set; }
+        public IFrame PrevFrame { get; set; }
 
         public bool IsSpare()
         {
